@@ -29,7 +29,8 @@ node{
                     " -Dsonar.projectName='Java :: Simple Spring Project' " +
                     " -Dsonar.projectVersion=1.0 " +
                     " -Dsonar.language=java " +
-                    " -Dsonar.sources=. " +
+
+                   " -Dsonar.sources=. " +
                     " -Dsonar.tests=. " +
                     " -Dsonar.test.inclusions='**/*Test*/**' " +
                     " -Dsonar.exclusions='**/*Test*/**' "
@@ -74,7 +75,17 @@ node{
     }
 
 }
+node{
 
+    checkout scm
+
+    stage("run security scan"){
+
+      sh "sudo docker run --network=bundlev2_prodnetwork --rm -t owasp/zap2docker-stable zap-baseline.py -t http://tomcat:10000/ -u https://github.com/devopsevd/oss-zap/blob/master/config"
+
+    }
+
+} 
 stage name:'Shutdown staging'
     node {
                 
